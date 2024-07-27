@@ -9,3 +9,13 @@ variable "singapore_azs" {
   description = "Availability Zones"
   default     = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
 }
+
+variable "domain_name" {
+  type    = string
+  default = "domain"
+}
+
+variable "subdomain_name" {
+  type    = string
+  default = "subdomain"
+}

@@ -1,10 +1,10 @@
 # Route 53 Zone Configuration 
 resource "aws_route53_zone" "shiftme_route53_zone" {
-  name = "mygcpprojects.xyz"
+  name = var.domain_name
 }
 
 resource "aws_route53_health_check" "health_check" {
-  fqdn              = "lb.mygcpprojects.xyz"
+  fqdn              = var.subdomain_name
   port              = 80
   type              = "HTTP"
   resource_path     = "/"
@@ -20,7 +20,7 @@ resource "aws_route53_health_check" "health_check" {
 resource "aws_route53_record" "shiftme_mumbai_route53_record" {
   zone_id         = aws_route53_zone.shiftme_route53_zone.zone_id
   set_identifier  = "mumbai"
-  name            = "lb.mygcpprojects.xyz"
+  name            = var.subdomain_name
   type            = "A"
   health_check_id = aws_route53_health_check.health_check.id
   failover_routing_policy {
@@ -33,7 +33,7 @@ resource "aws_route53_record" "shiftme_mumbai_route53_record" {
 resource "aws_route53_record" "shiftme_singapore_route53_record" {
   zone_id        = aws_route53_zone.shiftme_route53_zone.zone_id
   set_identifier = "singapore"
-  name           = "lb.mygcpprojects.xyz"
+  name           = var.subdomain_name
   type           = "A"
   failover_routing_policy {
     type = "SECONDARY"
@@ -44,7 +44,7 @@ resource "aws_route53_record" "shiftme_singapore_route53_record" {
 
 # AWS Certificate Manager
 resource "aws_acm_certificate" "shiftme-domain-certificate" {
-  domain_name       = "mygcpprojects.xyz"
+  domain_name       = var.domain_name
   validation_method = "DNS"
   lifecycle {
     create_before_destroy = true
